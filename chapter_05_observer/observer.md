@@ -1,7 +1,7 @@
-# This pattern allow us to transforms as source of information, and the rest
-# of the objects interested in listening, to keep up to date with the status of
-# the object
+## Keeping up with the Times with the Observer
+This pattern allow us to transforms as source of information, and the rest of the objects interested in listening, to keep up to date with the status of the `object`
 
+```ruby
 class Employee
   attr_reader :name
   attr_accessor :title, :salary
@@ -12,10 +12,10 @@ class Employee
     @salary = salary
   end
 end
+```
+One way of `notify` to the `Payment`. object will be given the by the attr_accessor of salary, overwritting it.
 
-# One way of notify to the Payment object will be given the by the attr_accessor
-# of salary, overwritting it
-
+```ruby
 class Payroll
   def update(employee)
     puts "#{employee.name} got his check"
@@ -37,14 +37,15 @@ class Employee
   end
 end
 
-# payroll = Payroll.new
-# fred = Employee.new('Fred', 'Crane Operator', 30000, payroll)
-# fred.salary = 35000
+payroll = Payroll.new
+fred = Employee.new('Fred', 'Crane Operator', 30000, payroll)
+fred.salary = 35000
+```
 
-# As right now the code is really hard-wire, and will need to constanly update
-# the Employee class to add new Departments, there has to be a better way
-# by keep a list of objects interested in the Employee changes
+As right now the code is really **hard-wire**, and will need to constanly **update** the `Employee` class to add new `Departments`
+There has to be a better way by keep a list of objects interested in the Employee changes **Observers**
 
+```ruby
 class Employee
   attr_reader :name, :title, :salary
 
@@ -77,12 +78,10 @@ class Employee
   end
 end
 
-# fred = Employee.new('Fred', 'Crane Operator', 30000.0)
-# payroll = Payroll.new
-# fred.add_observer( payroll )
-# fred.salary=35000.0
+fred = Employee.new('Fred', 'Crane Operator', 30000.0)
+payroll = Payroll.new
+fred.add_observer( payroll )
+fred.salary=35000.0
+```
 
-# By doing this way we have removed the coupling between the Employee class
-# and the Payroll class
-
-
+By doing this way we have removed the **coupling** between the `Employee` class and the `Payroll class
