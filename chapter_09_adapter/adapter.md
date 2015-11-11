@@ -20,4 +20,50 @@ When to choose between Adapetr or Modify the class, here are some exaple where o
 * The interface mismatch is exetnsive and complex.
 * You have no idea how this class works.
 
-| *Adpaters* preserve the encapsulation at the cost of some complexity.
+**Adpaters** preserve the encapsulation at the cost of some complexity.
+
+```ruby
+class Encrypter
+  def initilaize(key)
+    @key = key
+  end
+
+  def encrypt(reader, writer)
+    key_index = 0
+    while not reader.eof?
+      clear_char = reader.getc
+      encrypted_char = clear_char ^ @key[key_index]
+      writer.putc(encrypted_char)
+      key_index = (key_index + 1) % @key.size
+    end
+  end
+end
+
+class StringIOAdapter
+  def initialize(string)
+    @string = string
+    @position = 0
+  end
+
+  def eof_condition?
+    @position >= @string.length
+  end
+
+  def getc
+    raise EOFError  if eof_condition?
+    ch = @string[@position]
+    @position += 1
+    return ch
+  end
+
+  def eof?
+    eof_condition?
+  end
+end
+
+
+encrypter = Encrypter.new('XYZZY')
+reader= StringIOAdapter.new('We attack at dawn')
+writer=File.open('out.txt', 'wd')
+encrypter.encrypt(reader, writer)
+```

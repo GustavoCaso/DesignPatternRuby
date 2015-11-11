@@ -15,7 +15,91 @@ To building the **Composite** pattern we need:
 * We need one or more *leaf* classes that are the simplest individual tasks
 * We need one higher level class or `composite` that is built up from small *leaf* class.
 
-Let's start buildiing our example in the `rb` file in the folder
+```ruby
+# This will be our base class
+class Task
+  attr_reader :name
+  attr_accessor :parent
+
+  def initialize(name)
+    @name = name
+    @parent = nil
+  end
+
+  def get_time_required
+    0.0
+  end
+end
+```
+
+```ruby
+class AddDrayIngredientsTask < Task
+  def initialize
+    super('Add dry ingredients')
+  end
+
+  def get_time_required
+    1.0
+  end
+end
+
+class MixTask < Task
+  def initialize
+    super('Mix that batter up!')
+  end
+
+  def get_time_required
+    3.0
+  end
+end
+```
+
+```ruby
+class CompositeTask < Task
+  def initialize(name)
+    super(name)
+    @sub_tasks = []
+  end
+
+  def <<(task)
+    add_sub_task(task)
+  end
+
+  def [](index)
+    @sub_tasks[index]
+  end
+
+  def []=(index, new_task)
+    @sub_tasks[index] = new_task
+  end
+
+  def add_sub_task(task)
+    @sub_tasks << task
+    task.parent = self
+  end
+
+  def remove_sub_task(task)
+    @sub_tasks.delete(task)
+    task.parent = nil
+  end
+
+  def get_time_required
+    time = 0.0
+    @sub_tasks.each {|task|  time += task.get_time_required}
+    time
+  end
+end
+```
+
+```ruby
+class MakeButterTask < CompositeTask
+  def initiallize
+    super('Make Butter')
+    add_sub_task(AddDrayIngredientsTask.new)
+    add_sub_task(MixTask.new)
+  end
+end
+```
 
 In our example we created a base class `Task` and a more complex class `CompositeTask` but both have the same interface.
 
