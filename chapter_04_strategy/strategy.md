@@ -102,4 +102,4 @@ report = Report.new do |context|
     puts(line)
   end
 end.output_report
-``
+```
